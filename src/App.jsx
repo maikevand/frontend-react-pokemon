@@ -5,35 +5,30 @@ import PokemonCard from "./components/PokemonCard/PokemonCard.jsx";
 
 function App() {
 
-    const[pokemon, setPokemon] = useState({});
+    const [pokemonList, setPokemonList] = useState([]);
 
-    async function fetchPokemon() {
+    async function fetchPokemonList() {
         try {
-            const result=await axios.get("https://pokeapi.co/api/v2/pokemon/ditto");
-            setPokemon(result.data);
+            const dittoResult = await axios.get("https://pokeapi.co/api/v2/pokemon/ditto");
+            const jigglypuffResult = await axios.get("https://pokeapi.co/api/v2/pokemon/jigglypuff");
+            setPokemonList([dittoResult.data, jigglypuffResult.data]);
         } catch (e) {
             console.error(e);
         }
     }
 
-useEffect(() => {
-    fetchPokemon();
-}, []);
+    useEffect(() => {
+        fetchPokemonList();
+    }, []);
 
-  return (
-      <>
-          <h1>Gotta catch em all!</h1>
-          {pokemon.id && (
-              <PokemonCard
-              name={pokemon.name}
-              sprites={pokemon.sprites}
-              moves={pokemon.moves}
-              weight={pokemon.weight}
-              abilities={pokemon.abilities}
-              />
-          )}
-      </>
-  );
+    return (
+        <>
+            <h1>Gotta catch em all!</h1>
+            {pokemonList.map((pokemon) => (
+                <PokemonCard key={pokemon.id} currentPokemon={pokemon}/>
+            ))}
+        </>
+    );
 }
 
 export default App
