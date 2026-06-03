@@ -17,12 +17,22 @@ function App() {
             //     return axios.get(pokemon.url);
             // });
             // setPokemonList([dittoResult.data, jigglypuffResult.data]);
-            const firstPokemon = listResult.data.results[0];
+            // const firstPokemon = listResult.data.results[0];
+            const twentyPokemon = listResult.data.results;
             // console.log(firstPokemon);
+            const fullPokemonList = [];
 
-            const firstPokemonDetails = await axios.get(firstPokemon.url);
-            console.log(firstPokemonDetails.data)
-            setPokemonList([firstPokemonDetails.data]);
+            for (const pokemon of twentyPokemon) {
+                const detailResult = await axios.get(pokemon.url);
+                fullPokemonList.push(detailResult.data);
+            }
+
+            console.log(fullPokemonList);
+            setPokemonList(fullPokemonList);
+
+            // const twentyPokemonDetails = await axios.get(twentyPokemon);
+            // console.log(twentyPokemonDetails.data)
+            // setPokemonList([twentyPokemonDetails.data]);
         } catch (e) {
             console.error(e);
         }
