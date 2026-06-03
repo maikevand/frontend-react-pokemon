@@ -17,7 +17,12 @@ function App() {
             //     return axios.get(pokemon.url);
             // });
             // setPokemonList([dittoResult.data, jigglypuffResult.data]);
-            setPokemonList(listResult.data.results);
+            const firstPokemon = listResult.data.results[0];
+            // console.log(firstPokemon);
+
+            const firstPokemonDetails = await axios.get(firstPokemon.url);
+            console.log(firstPokemonDetails.data)
+            setPokemonList([firstPokemonDetails.data]);
         } catch (e) {
             console.error(e);
         }
@@ -30,12 +35,12 @@ function App() {
     return (
         <>
             <h1>Gotta catch em all!</h1>
-            {/*{pokemonList.map((pokemon) => (*/}
-            {/*    <PokemonCard key={pokemon.id} currentPokemon={pokemon}/>*/}
-            {/*))}*/}
             {pokemonList.map((pokemon) => (
-            <p key={pokemon.name}>{pokemon.name}</p>
+                <PokemonCard key={pokemon.id} currentPokemon={pokemon}/>
             ))}
+            {/*{pokemonList.map((pokemon) => (*/}
+            {/*<p key={pokemon.name}>{pokemon.name}</p>*/}
+            {/*))}*/}
         </>
     );
 }
