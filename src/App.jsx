@@ -12,18 +12,24 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    async function fetchPokemonList() {
+    async function fetchPokemonList(signal) {
         try {
             setLoading(true);
             setError("");
 
-            const listResult = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`);
+            const listResult = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`,
+                {
+                    signal: signal,
+                }
+            );
 
             const twentyPokemon = listResult.data.results;
             const fullPokemonList = [];
 
             for (const pokemon of twentyPokemon) {
-                const detailResult = await axios.get(pokemon.url);
+                const detailResult = await axios.get(pokemon.url, {
+                    signal: signal,
+                });
                 fullPokemonList.push(detailResult.data);
             }
 
@@ -40,7 +46,14 @@ function App() {
     }
 
     useEffect(() => {
-        fetchPokemonList();
+        const controller = new AbortController();
+
+        fetchPokemonList(controller.signal);
+
+        return function cleanup() {
+            controller.abort();
+        };
+
     }, [offset]);
 
     function handleNext() {
